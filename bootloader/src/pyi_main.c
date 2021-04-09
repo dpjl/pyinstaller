@@ -69,6 +69,11 @@ pyi_main(int argc, char * argv[])
         return -1;
     }
 
+    char *newHomePath = (char *) calloc(PATH_MAX, sizeof(char));
+    pyi_path_join(newHomePath, homepath, "lib");
+    strcpy(homepath, newHomePath);
+    free(newHomePath);
+
     /* For the curious:
      * On Windows, the UTF-8 form of MEIPASS2 is passed to pyi_setenv, which
      * decodes to UTF-16 before passing it to the Windows API. So the var's value
@@ -159,6 +164,11 @@ pyi_main(int argc, char * argv[])
              */
             archive_status->has_temp_directory = true;
             strcpy(archive_status->mainpath, archive_status->temppath);
+        } else {
+            char *newPath = (char *) calloc(PATH_MAX, sizeof(char));
+            pyi_path_join(newPath, archive_status->mainpath, "lib");
+            strcpy(archive_status->mainpath, newPath);
+            free(newPath);
         }
 
         /* Main code to initialize Python and run user's code. */
